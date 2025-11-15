@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Brat Generator Ultimate</title>
+
+<!-- GOOGLE FONTS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Amatic+SC:wght@700&family=Caveat:wght@400;700&family=Comfortaa:wght@300;700&family=Inter:wght@400;700&family=Montserrat:wght@400;700&family=Nunito:wght@400;700&family=Pacifico&family=Poppins:wght@400;700&family=Playfair+Display:wght@400;700&family=Permanent+Marker&family=Roboto:wght@400;700&family=Sora:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f7f6f3;
+    --panel:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; 
+    background:var(--bg);
+    font-family:Inter, sans-serif;
+    padding:12px;
+    color:#111;
+  }
+  h1{font-size:20px;margin:10px 0}
+
+  /* STAGE */
+  .stage-wrap{display:flex;justify-content:center;min-height:380px;margin-bottom:12px}
+  #stage{
+    width:100%;max-width:900px;height:500px;
+    background:#fff;
+    border-radius:14px;
+    overflow:hidden;
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+  }
+  #bgImg{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;display:none;
+  }
+  #chalk{
+    position:absolute;inset:0;
+    pointer-events:none;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.03) 0, transparent 10%),
+      radial-gradient(circle at 80% 70%, rgba(255,255,255,0.03) 0, transparent 12%);
+    mix-blend-mode:overlay;
+  }
+
+  .text-block{
+    position:relative;
+    z-index:5;
+    text-align:center;
+    padding:4px;
+    width:92%;
+  }
+  .line{
+    display:block;
+    font-size:84px;
+    font-weight:600;
+    transform-origin:center;
+    white-space:pre-wrap;
+    line-height:.9;
+  }
+
+  /* SCRIBBLES */
+  .scribble{
+    position:absolute;inset:0;
+    display:none;align-items:center;justify-content:center;
+    pointer-events:none;z-index:6;
+  }
+  .scribble svg{width:80%;height:60%}
+
+  /* CONTROLS */
+  .controls{
+    background:var(--panel);
+    padding:12px;border-radius:12px;
+    box-shadow:0 6px 18px rgba(0,0,0,.05);
+    display:flex;flex-direction:column;
+    gap:10px;
+  }
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .input-like{
+    display:flex;align-items:center;
+    padding:8px 10px;border-radius:999px;
+    background:#fff;
+    border:1px solid rgba(0,0,0,.1);
+    flex:1;
+  }
+  .input-like input{border:0;outline:0;width:100%;background:transparent;font-size:16px}
+
+  button,select,input[type=color]{
+    padding:8px;border-radius:10px;border:1px solid rgba(0,0,0,.1);
+  }
+  button.btn{
+    background:#111;color:#fff;border:0;cursor:pointer;
+  }
+  .toggle{
+    display:flex;gap:6px;padding:6px 10px;
+    border:1px solid rgba(0,0,0,.1);
+    border-radius:8px;background:#fafafa;
+  }
+  .range{width:160px}
+</style>
+</head>
+
+<body>
+<h1>Brat Generator — Ultimate (White Kapur)</h1>
+
+<div class="stage-wrap">
+  <div id="stage">
+
+    <img id="bgImg">
+    <div id="chalk"></div>
+
+    <!-- SCRIBBLE OVERLAYS -->
+    <div id="scrib1" class="scribble">
+      <svg viewBox="0 0 800 200">
+        <path d="M40 140 C180 30,320 180,760 60" stroke="#000" stroke-width="22" fill="none" opacity=".12"/>
+      </svg>
+    </div>
+    <div id="scrib2" class="scribble">
+      <svg viewBox="0 0 800 200">
+        <path d="M40 120 C160 40,260 160,380 60 C500 -20,580 160,720 80"
+          stroke="#000" stroke-width="12" fill="none" opacity=".16"/>
+      </svg>
+    </div>
+    <div id="scrib3" class="scribble">
+      <svg viewBox="0 0 800 200">
+        <path d="M60 80 C200 200,320 40,460 180 C580 260,700 30,760 120"
+          stroke="#000" stroke-width="28" fill="none" opacity=".10"/>
+      </svg>
+    </div>
+
+    <!-- TEXT -->
+    <div class="text-block">
+      <span id="line1" class="line">ada</span>
+      <span id="line2" class="line">dehh</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+
+  <div class="row">
+    <label class="input-like">
+      <input id="txtInput" type="text" value="ada|dehh" placeholder="Ketik teks... pakai | untuk baris baru">
+    </label>
+
+    <div class="toggle"><input type="checkbox" id="boldChk"> Bold</div>
+    <div class="toggle"><input type="checkbox" id="italicChk"> Italic</div>
+    <div class="toggle"><input type="checkbox" id="underlineChk"> Underline</div>
+
+    <select id="fontSel">
+      <option>Inter</option>
+      <option>Poppins</option>
+      <option>Montserrat</option>
+      <option>Anton</option>
+      <option>Pacifico</option>
+      <option>Permanent Marker</option>
+      <option>Caveat</option>
+      <option>Amatic SC</option>
+      <option>Nunito</option>
+      <option>Sora</option>
+    </select>
+  </div>
+
+  <div class="row">
+
+    Ukuran:
+    <input id="sizeRange" class="range" type="range" min="40" max="240" value="84">
+
+    Spasi huruf:
+    <input id="letterRange" class="range" type="range" min="-5" max="12" value="0">
+
+    Tinggi baris:
+    <input id="linehRange" class="range" type="range" min="0.7" max="1.4" value="0.9" step="0.01">
+
+    Warna:
+    <input id="colorPick" type="color" value="#000000">
+
+  </div>
+
+  <div class="row">
+    <div class="toggle"><input type="checkbox" id="strokeChk"> Outline</div>
+    Warna outline: <input type="color" id="strokeColor" value="#ffffff">
+    Tebal: <input class="range" type="range" id="strokeWidth" min="0" max="12" value="2">
+
+    <div class="toggle"><input type="checkbox" id="shadowChk"> Shadow</div>
+    <input type="color" id="shadowColor" value="#000000">
+    X: <input type="range" id="shadowX" min="-40" max="40" value="4">
+    Y: <input type="range" id="shadowY" min="-40" max="40" value="6">
+    Blur: <input type="range" id="shadowBlur" min="0" max="60" value="12">
+  </div>
+
+  <div class="row">
+    <input id="bgUpload" type="file" accept="image/*" hidden>
+    <button class="btn" id="bgBtn">Upload BG</button>
+    <button class="btn" id="resetBgBtn">Reset BG</button>
+
+    Coretan:
+    <select id="scribSel">
+      <option value="0">None</option>
+      <option value="1">Marker Loose</option>
+      <option value="2">Zig Scribble</option>
+      <option value="3">Heavy Marker</option>
+    </select>
+
+    <button class="btn" id="downloadBtn">Download PNG</button>
+  </div>
+
+</div>
+
+<!-- html2canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+const inp = id => document.getElementById(id);
+
+/* Elements */
+const txtInput = inp("txtInput");
+const line1 = inp("line1");
+const line2 = inp("line2");
+
+const fontSel = inp("fontSel");
+const sizeRange = inp("sizeRange");
+const letterRange = inp("letterRange");
+const linehRange = inp("linehRange");
+const colorPick = inp("colorPick");
+
+const boldChk = inp("boldChk");
+const italicChk = inp("italicChk");
+const underlineChk = inp("underlineChk");
+
+const strokeChk = inp("strokeChk");
+const strokeColor = inp("strokeColor");
+const strokeWidth = inp("strokeWidth");
+
+const shadowChk = inp("shadowChk");
+const shadowColor = inp("shadowColor");
+const shadowX = inp("shadowX");
+const shadowY = inp("shadowY");
+const shadowBlur = inp("shadowBlur");
+
+const bgBtn = inp("bgBtn");
+const bgUpload = inp("bgUpload");
+const bgImg = inp("bgImg");
+const resetBgBtn = inp("resetBgBtn");
+
+const scribSel = inp("scribSel");
+const scrib1 = inp("scrib1");
+const scrib2 = inp("scrib2");
+const scrib3 = inp("scrib3");
+
+const stage = inp("stage");
+
+/* Split text */
+function splitLines(t){
+  const p = t.split("|");
+  return [p[0] || "", p[1] || ""];
+}
+
+/* Render text */
+function renderText(){
+  const [a,b] = splitLines(txtInput.value);
+  line1.textContent = a;
+  line2.textContent = b;
+  applyStyle();
+}
+
+/* Apply styles */
+function applyStyle(){
+  [line1,line2].forEach(el=>{
+    el.style.fontFamily = fontSel.value;
+    el.style.fontSize = sizeRange.value+"px";
+    el.style.letterSpacing = letterRange.value+"px";
+    el.style.lineHeight = linehRange.value;
+    el.style.color = colorPick.value;
+
+    el.style.fontWeight = boldChk.checked ? "700":"400";
+    el.style.fontStyle = italicChk.checked ? "italic":"normal";
+    el.style.textDecoration = underlineChk.checked ? "underline":"none";
+
+    if(strokeChk.checked){
+      el.style.webkitTextStroke = strokeWidth.value+"px "+strokeColor.value;
+    } else {
+      el.style.webkitTextStroke = "0 transparent";
+    }
+
+    if(shadowChk.checked){
+      el.style.textShadow =
+        `${shadowX.value}px ${shadowY.value}px ${shadowBlur.value}px ${shadowColor.value}`;
+    } else {
+      el.style.textShadow = "none";
+    }
+  });
+}
+
+/* Background */
+bgBtn.onclick = ()=> bgUpload.click();
+bgUpload.onchange = e=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  bgImg.src = URL.createObjectURL(f);
+  bgImg.style.display="block";
+};
+resetBgBtn.onclick = ()=>{
+  bgImg.src="";
+  bgImg.style.display="none";
+  bgUpload.value="";
+};
+
+/* Scribbles */
+function updateScrib(){
+  scrib1.style.display="none";
+  scrib2.style.display="none";
+  scrib3.style.display="none";
+
+  if(scribSel.value=="1") scrib1.style.display="flex";
+  if(scribSel.value=="2") scrib2.style.display="flex";
+  if(scribSel.value=="3") scrib3.style.display="flex";
+}
+
+/* Download */
+inp("downloadBtn").onclick = ()=>{
+  html2canvas(stage,{scale:2}).then(c=>{
+    const a = document.createElement("a");
+    a.download="brat.png";
+    a.href=c.toDataURL();
+    a.click();
+  });
+};
+
+/* Events */
+txtInput.oninput=renderText;
+fontSel.onchange=applyStyle;
+sizeRange.oninput=applyStyle;
+letterRange.oninput=applyStyle;
+linehRange.oninput=applyStyle;
+colorPick.oninput=applyStyle;
+
+boldChk.onchange=applyStyle;
+italicChk.onchange=applyStyle;
+underlineChk.onchange=applyStyle;
+
+strokeChk.onchange=applyStyle;
+strokeColor.oninput=applyStyle;
+strokeWidth.oninput=applyStyle;
+
+shadowChk.onchange=applyStyle;
+shadowColor.oninput=applyStyle;
+shadowX.oninput=applyStyle;
+shadowY.oninput=applyStyle;
+shadowBlur.oninput=applyStyle;
+
+scribSel.onchange=updateScrib;
+
+/* Init */
+renderText();
+updateScrib();
+</script>
+
+</body>
+</html>
